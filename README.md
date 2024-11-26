@@ -1,4 +1,4 @@
-# 4Bit-Up-Down-Asynchronous-Reset-Counter-Synthesis
+# 4Bit-Up-Down-Asynchronous-Reset-Counter-Synthesize the Gate Level Netlist and tabulate Area, Power and Timing reports.
 
 ## Aim:
 
@@ -46,6 +46,49 @@ iv → Sets Clock Uncertainty to 10ps.
 
 v, vi → Sets the maximum limit for I/O port delay to 1ps.
 
+• The .v File must contain the following commands:
+```
+`timescale 1ns / 1 ns
+module counter(clk,m,rst,count);
+input clk,m,rst;
+output reg [3:0] count;
+always@(posedge clk or negedge rst)
+begin
+if (!rst)
+count=0;
+else if(m)
+count=count+1;
+else
+count=count-1;
+end
+endmodule
+```
+• The Run.tcl File must contain the following commands:
+```
+read_libs /cadence/install/FOUNDRY-01/digital/90nm/dig/lib/slow.lib
+read_hdl counter.v
+elaborate
+read_sdc input_constraints.sdc 
+
+syn_generic
+report_area
+syn_map
+report_area
+syn_opt
+report_area 
+
+report_area > counter_area.txt
+report_power > counter_power.txt
+report_timing > counter_timing.txt
+report_area > counter_cell.txt
+report_gates > counter_gates.txt
+
+write_hdl > counter_netlist.v
+write_sdc > output_constraints.sdc 
+
+gui_show
+```
+
 ### Step 3 : Performing Synthesis
 
 The Liberty files are present in the library path,
@@ -64,12 +107,16 @@ used.
 • Genus Script file with .tcl file Extension commands are executed one by one to synthesize the netlist.
 
 #### Synthesis RTL Schematic :
+![image](https://github.com/user-attachments/assets/6457acce-2036-4404-943c-2c0339d246e1)
 
 #### Area report:
+![image](https://github.com/user-attachments/assets/b6af36b9-5e9d-4f14-9d22-6b8b46261dd0)
 
 #### Power Report:
+![image](https://github.com/user-attachments/assets/19ed6fc1-b244-4ece-a6c6-6480efc6edc2)
 
 #### Timing Report: 
+![image](https://github.com/user-attachments/assets/472ea805-2702-4238-bf34-700afe8e332e)
 
 #### Result: 
 
