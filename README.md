@@ -22,7 +22,7 @@ Synthesis requires three files as follows,
 
  ### Step 2 : Creating an SDC File
 
-•	In your terminal type “gedit input_constraints.sdc” to create an SDC File if you do not have one.
+•	In your terminal type “gedit input_constraints.sd” to create an SDC File if you do not have one.
 
 •	The SDC File must contain the following commands;
 
