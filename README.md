@@ -1,4 +1,4 @@
-# 4Bit-Up-Down-Asynchronous-Reset-Counter-Synthesis
+# EXP 4: 4Bit Up-Down Counter Asynchronous Reset Counter-Synthesize the Gate Level Netlist and tabulate Area, Power and Timing reports.
 
 ## Aim:
 
@@ -20,12 +20,13 @@ Synthesis requires three files as follows,
 
 ◦ SDC (Synopsis Design Constraint) File (.sdc)
 
- ### Step 2 : Creating an SDC File
+ ### Step 2 : Creating an SDC , .v File
 
 •	In your terminal type “gedit input_constraints.sdc” to create an SDC File if you do not have one.
 
-•	The SDC File must contain the following commands;
+•	The SDC File must contain the following commands:
 
+```
 create_clock -name clk -period 2 -waveform {0 1} [get_ports "clk"]
 
 set_clock_transition -rise 0.1 [get_clocks "clk"]
@@ -45,6 +46,52 @@ ii, iii → Sets Clock Rise and Fall time to 100ps.
 iv → Sets Clock Uncertainty to 10ps.
 
 v, vi → Sets the maximum limit for I/O port delay to 1ps.
+```
+•	The .v File must contain the following commands:
+
+```
+`timescale 1ns / 1 ns
+module counter(clk,m,rst,count);
+input clk,m,rst;
+output reg [3:0] count;
+always@(posedge clk or negedge rst)
+begin
+if (!rst)
+count=0;
+else if(m)
+count=count+1;
+else
+count=count-1;
+end
+endmodule
+```
+•	The Run.tcl File must contain the following commands:
+
+```
+read_libs /cadence/install/FOUNDRY-01/digital/90nm/dig/lib/slow.lib
+read_hdl counter.v
+elaborate
+read_sdc input_constraints.sdc 
+
+syn_generic
+report_area
+syn_map
+report_area
+syn_opt
+report_area 
+
+report_area > counter_area.txt
+report_power > counter_power.txt
+report_timing > counter_timing.txt
+report_area > counter_cell.txt
+report_gates > counter_gates.txt
+
+write_hdl > counter_netlist.v
+write_sdc > output_constraints.sdc 
+
+gui_show
+
+```
 
 ### Step 3 : Performing Synthesis
 
@@ -65,11 +112,21 @@ used.
 
 #### Synthesis RTL Schematic :
 
+![image](https://github.com/user-attachments/assets/600a4a35-0487-45ae-94e8-0efba6b43e95)
+
 #### Area report:
+
+![image](https://github.com/user-attachments/assets/abc7a21a-165b-4a59-8cf8-ad686ccfcd09)
+
 
 #### Power Report:
 
+![image](https://github.com/user-attachments/assets/024a4f91-8970-4fe2-928b-aa80bc6a3171)
+
+
 #### Timing Report: 
+![image](https://github.com/user-attachments/assets/7c140ab0-a416-4101-839a-fb316e0b7be6)
+
 
 #### Result: 
 
